@@ -1,3 +1,11 @@
-as --32 minimum.s -o minimum.o
-ld -m elf_i386 minimum.o -o minimum
+### These are the commands I need to run on the terminal in order to be able to run 32-bit assembly instructions into a 64 bit architecture ###
+
+
+## Assemble the file
+
+as --32 filename.s -o filename.o
+
+## Link the file
+
+ld -m elf_i386 filename.o -o filename
 
