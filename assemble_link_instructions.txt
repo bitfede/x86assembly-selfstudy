@@ -1,0 +1,3 @@
+as --32 minimum.s -o minimum.o
+ld -m elf_i386 minimum.o -o minimum
+
