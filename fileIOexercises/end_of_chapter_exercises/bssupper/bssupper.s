@@ -1,5 +1,7 @@
 #
 # AUTHOR:           Jonathan Bartlett (book author, this is an example I'm copying from the ebok)
+#                   Federico G. De Faveri (I modified the example main program so that the file
+#                                           descriptors are stored in .bss instead of .data)
 #
 # PURPOSE:          This program will convert an input file to an output file with all letters converted to uppercase
 #
