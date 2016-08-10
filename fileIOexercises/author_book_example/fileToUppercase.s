@@ -94,8 +94,54 @@ _start:
     movl %eax, ST_FD_OUT(%ebp)              #store the file descriptor here
     
     
-    #TODO main loop
-  
+  ##### BEGIN MAIN LOOP #####
+  read_loop_begin:
+    
+    ### READ IN A BLOCK FROM THE UNPUT FILE ###
+    movl $SYS_READ, %eax                    #open syscall
+    movl ST_FD_IN(%ebp), %ebx               #get the unput file descriptor
+    movl $BUFFER_DATA, %ecx                 #get the location to read into
+    movl $BUFFER_SIZE, %edx                 #get the size of the buffer
+    int  $LINUX_SYSCALL                     #size of buffer is read and returned in %eax
+    
+    ### EXIT IF WE HAVE REACHED THE END ###
+    cmpl $END_OF_FILE, %eax
+    jle end_loop                            #if found or on error, go to the end
+    
+  continue_read_loop:
+    ### CONVERT BLOCK TO UPPER CASE ###
+    pushl $BUFFER_DATA                      #location of buffer
+    pushl %eax                              #size of the buffer
+    call convert_to_upper                   #call the function
+    popl %eax                               #get the size back
+    addl $4, %esp                           #restore %esp
+    
+    ### WRITE THE BLOCK OUT TO THE OUTPUT FILE ###
+    movl %eax, %edx                         #size of the buffer
+    movl $SYS_WRITE, %eax                   #open syscall
+    movl ST_FD_OUT(%ebp), %ebx              #file to use
+    movl $BUFFER_DATA, %ecx                 #location of the buffer
+    int $LINUX_SYSCALL                      #send interrupt to linux kernel
+    
+    ### CONTINUE THE LOOP ###
+    
+    jmp read_loop_begin                     
+    
+  end_loop:
+    ### CLOSE THE FILES ###
+    #
+    # NOTE: no error checking here because error conditions dont' signify anything special here
+    #
+    movl $SYS_CLOSE, %eax                   #open syscall to close file
+    movl ST_FD_OUT(%ebp), %ebx      
+    int $LINUX_SYSCALL
+    
+    ### EXIT ###
+    movl $SYS_EXIT, %eax
+    movl $0, %ebx
+    int $LINUX_SYSCALL
+    
+    
   
   
   
