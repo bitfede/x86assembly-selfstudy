@@ -57,7 +57,7 @@ factorial:
   cmpl      $0, %ebx                    #checks if our counter is at zero
   je        exit_loop                   #if counter is == to zero jump to the exit of the function
   imull     %ebx, %eax                  #else multiply decreased value with eax (which will contain the final result)
-  jmp       factorial_loop
+  jmp       factorial_loop              #go back to the beginning of the loop
   
   
   exit_loop:
