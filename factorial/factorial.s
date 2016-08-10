@@ -23,7 +23,7 @@ _start:
   pushl    %ebx                        #push number on the stack, this number is the first parameter of the
                                        #function factorial
                                        
- # call     factorial
+  call     factorial
   
   addl     $4, %esp                    #returns stack pointer register to the pre-function situation
   movl     %eax, %ebx                  #moves the returned value into ebx,so we can print it in stdout with echo $?
@@ -51,7 +51,10 @@ factorial:
   
   #TODO factorial logic and close function
   
-
+  movl      %ebp, %esp                  #bring the old base pointer back to the initial stack frame
+  popl      %ebp                        #restore old ebp
+  ret                                   #pops value on the top of the stack, which is the old return address, and
+                                        #puts it in %eip
 
 
 
