@@ -12,42 +12,50 @@
 
 .section .data
 
-##### CONSTANTS #####
+  ##### CONSTANTS #####
 
-# System call numbers
+  # System call numbers
 
-.equ SYS_OPEN,   5
-.equ SYS_WRITE,  4
-.equ SYS_READ,   3
-.equ SYS_CLOSE,  6
-.equ SYS_EXIT,   1
+  .equ SYS_OPEN,   5
+  .equ SYS_WRITE,  4
+  .equ SYS_READ,   3
+  .equ SYS_CLOSE,  6
+  .equ SYS_EXIT,   1
 
-# Options for open
+  # Options for open
 
-.equ O_RDONLY,   0
-.equ O_CREAT_WRONLY_TRUNC, 03101
+  .equ O_RDONLY,   0
+  .equ O_CREAT_WRONLY_TRUNC, 03101
 
-# Standard file descriptors
+  # Standard file descriptors
 
-.equ STDIN,      0
-.equ STDOUT,     1
-.equ STDERR,     2
+  .equ STDIN,      0
+  .equ STDOUT,     1
+  .equ STDERR,     2
 
-# System call interrupt
+  # System call interrupt
 
-.equ LINUX_SYSCALL, 0x80
-.equ END_OF_FILE, 0                       #the return value of read, which means we've hit the end of the file
+  .equ LINUX_SYSCALL, 0x80
+  .equ END_OF_FILE, 0                       #the return value of read, which means we've hit the end of the file
 
-.equ NUMBER_ARGUMENTS, 2              
+  .equ NUMBER_ARGUMENTS, 2              
 
 .section .bss
 
-# Buffer - This is where the data is loaded into from the data file and written from
-#          into the output file. This should never exceed 16,000 for various reasons
-
-.equ BUFFER_SIZE, 500
-.lcomm BUFFER_DATA, BUFFER_SIZE           #lcomm will create a symbol BUFFER_DATA that refers to a 500 byte storage location
-                                          #that we can use as a buffer
+  # Buffer - This is where the data is loaded into from the data file and written from
+  #          into the output file. This should never exceed 16,000 for various reasons
+  .equ BUFFER_SIZE, 500
+  .lcomm BUFFER_DATA, BUFFER_SIZE           #lcomm will create a symbol BUFFER_DATA that refers to a 500 byte storage location
+                                            #that we can use as a buffer
+                                            
+  # Storage for file descriptors
+  .equ FILE_DESCR_RESERVE,  8
+  # Input file
+  .lcomm INPUT_FILE_DATA, FILE_DESCR_RESERVE
+  #output file
+  .lcomm OUTPUT_FILE_DATA, FILE_DESCR_RESERVE
+  
+  
 
 .section .text
 
@@ -79,7 +87,7 @@ _start:
   
   store_fd_in:
   ##### SAVE THE INPUT FILE-DESCRIPTOR #####
-    movl %eax, ST_FD_IN(%ebp)               #save the given file descriptor
+    movl %eax, INPUT_FILE_DATA               #save the given file descriptor
     
   open_fd_out:
   ##### OPEN THE OUTPUT FILE #####
@@ -99,7 +107,7 @@ _start:
     
     ### READ IN A BLOCK FROM THE UNPUT FILE ###
     movl $SYS_READ, %eax                    #open syscall
-    movl ST_FD_IN(%ebp), %ebx               #get the unput file descriptor
+    movl INPUT_FILE_DATA, %ebx               #get the unput file descriptor
     movl $BUFFER_DATA, %ecx                 #get the location to read into
     movl $BUFFER_SIZE, %edx                 #get the size of the buffer
     int  $LINUX_SYSCALL                     #size of buffer is read and returned in %eax
@@ -192,7 +200,7 @@ convert_to_upper:
     cmpb $LOWERCASE_A, %cl
     jl   next_byte
     cmpb $LOWERCASE_Z, %cl
-    jl   next_byte
+    jg   next_byte
     
     #otherwise convert the byte to uppercase
     addb  $UPPER_CONVERSION, %cl

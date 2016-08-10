@@ -1,6 +1,6 @@
 #
 # AUTHOR:           Jonathan Bartlett (book author, this is an example I'm copying from the ebok)
-#                   Federico G. De Faveri (modified the book example to use STDOUT and STDIN instead of files)  
+#                   Federico G. De Faveri (modified this book example to use STDOUT and STDIN instead of files)  
 #
 # PURPOSE:          This program will convert an input from STDIN to an output STDOUT with all letters converted to uppercase
 #
