@@ -166,12 +166,49 @@ _start:
 .equ     UPPER_CONVERSION, 'A' - 'a' 
 
 ##### STACK STUFF #####
-  
-  
-  
+#length of buffer
+.equ     ST_BUFFER_LEN, 8
+#actual buffer
+.equ     ST_BUFFER, 12
 
+convert_to_upper:
+  pushl %ebp
+  movl %esp, %ebp
+  
+  ### SET UP VARIABLES ###
+  movl ST_BUFFER(%ebp), %eax                #put begining of buffer in eax
+  movl ST_BUFFER_LEN(%ebp), %ebx            #put length of buffer in ebx
+  movl $0, %edi
+  
+  #if a buffer of zero length was given to us, we just leave
+  cmpl $0, %ebx
+  je end_convert_loop
+  
+  convert_loop:
+    #get the current byte
+    movb (%eax, %edi, 1), %cl
+    
+    #go to the next byte unless it is between 'a' and 'z'
+    cmpb $LOWERCASE_A, %cl
+    jl   next_byte
+    cmpb $LOWERCASE_Z, %cl
+    jl   next_byte
+    
+    #otherwise convert the byte to uppercase
+    addb  $UPPER_CONVERSION, %cl
+    movb  %cl, (%eax, %edi, 1)               #and store it back
+  next_byte:
+    incl  %edi                                #next byte
+    cmpl  %edi, %ebx                          #continue unless we've reached the end
 
-
+    jne   convert_loop
+    
+    
+  end_convert_loop:
+    #no return value, just leave
+    movl  %ebp, %esp
+    popl  %ebp
+    ret
 
 
 
