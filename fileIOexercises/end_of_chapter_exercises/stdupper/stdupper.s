@@ -102,7 +102,7 @@ _start:
     popl %eax                               #get the size back
     addl $4, %esp                           #restore %esp
     
-    ### WRITE THE BLOCK OUT TO THE OUTPUT FILE ###
+    ### WRITE THE BLOCK OUT TO STDOUT ###
     movl %eax, %edx                         #size of the buffer
     movl $SYS_WRITE, %eax                   #open syscall
     movl $STDOUT, %ebx                      #file to use
@@ -119,7 +119,7 @@ _start:
     # NOTE: no error checking here because error conditions dont' signify anything special here
     #
     movl $SYS_CLOSE, %eax                   #open syscall to close file
-    movl ST_FD_OUT(%ebp), %ebx      
+    movl $STDOUT, %ebx      
     int $LINUX_SYSCALL
     
     ### EXIT ###
