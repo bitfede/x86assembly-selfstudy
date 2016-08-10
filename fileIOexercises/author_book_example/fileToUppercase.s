@@ -142,6 +142,30 @@ _start:
     int $LINUX_SYSCALL
     
     
+#
+# PURPOSE: this function does the converstion to upper case for a block
+#
+# INPUT: 1- the first parameter is the location of the block of memory to convert.
+#        2- the second parameter is the length of that buffer
+#
+# OUTPUT: This function overwrites the current content of the buffer with the upper-casified
+#         version
+#
+# VARIABLES: %eax - beginning of buffer
+#            %ebx - length of buffer
+#            %edi - current buffer offset
+#            %cl  - current byte being examined (first part of %ecx)
+#
+
+##### CONSTANTS #####
+#the lower boundary of our search
+.equ     LOWERCASE_A, 'a'
+#the upper boundary of our search
+.equ     LOWERCASE_Z, 'z'
+#conversion between upper and lower case
+.equ     UPPER_CONVERSION, 'A' - 'a' 
+
+##### STACK STUFF #####
   
   
   
