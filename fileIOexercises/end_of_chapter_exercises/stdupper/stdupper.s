@@ -85,7 +85,7 @@ _start:
     
     ### READ IN A BLOCK FROM THE UNPUT FILE ###
     movl $SYS_READ, %eax                    #open syscall
-    movl ST_FD_IN(%ebp), %ebx               #get the unput file descriptor
+    movl $STDIN, %ebx                       #get the unput file descriptor
     movl $BUFFER_DATA, %ecx                 #get the location to read into
     movl $BUFFER_SIZE, %edx                 #get the size of the buffer
     int  $LINUX_SYSCALL                     #size of buffer is read and returned in %eax
@@ -105,7 +105,7 @@ _start:
     ### WRITE THE BLOCK OUT TO THE OUTPUT FILE ###
     movl %eax, %edx                         #size of the buffer
     movl $SYS_WRITE, %eax                   #open syscall
-    movl ST_FD_OUT(%ebp), %ebx              #file to use
+    movl $STDOUT, %ebx                      #file to use
     movl $BUFFER_DATA, %ecx                 #location of the buffer
     int $LINUX_SYSCALL                      #send interrupt to linux kernel
     
@@ -149,7 +149,7 @@ _start:
 #the upper boundary of our search
 .equ     LOWERCASE_Z, 'z'
 #conversion between upper and lower case
-.equ     UPPER_CONVERSION, 'A' - 'a' 
+.equ     UPPER_CONVERSION, 'A' - 'a'
 
 ##### STACK STUFF #####
 #length of buffer
@@ -178,7 +178,7 @@ convert_to_upper:
     cmpb $LOWERCASE_A, %cl
     jl   next_byte
     cmpb $LOWERCASE_Z, %cl
-    jl   next_byte
+    jg   next_byte
     
     #otherwise convert the byte to uppercase
     addb  $UPPER_CONVERSION, %cl

@@ -192,7 +192,7 @@ convert_to_upper:
     cmpb $LOWERCASE_A, %cl
     jl   next_byte
     cmpb $LOWERCASE_Z, %cl
-    jl   next_byte
+    jg   next_byte
     
     #otherwise convert the byte to uppercase
     addb  $UPPER_CONVERSION, %cl
