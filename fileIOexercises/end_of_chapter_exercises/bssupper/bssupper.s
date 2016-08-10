@@ -64,8 +64,6 @@
 #STACK POSITIONS
 
 .equ ST_SIZE_RESERVE,  8
-.equ ST_FD_IN,        -4
-.equ ST_FD_OUT,       -8
 .equ ST_ARGC,          0                  #number of arguments
 .equ ST_ARGV_0,        4                  #name of program
 .equ ST_ARGV_1,        8                  #input file name
@@ -76,7 +74,7 @@ _start:
   ##### INITIALIZE PROGRAM #####
 
   movl        %esp, %ebp                  #save the stack pointer
-  subl        $ST_SIZE_RESERVE, %esp      #allocate space for our file descriptors in the stack
+
 
   open_files:
   open_fd_in:
