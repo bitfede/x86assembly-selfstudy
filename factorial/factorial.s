@@ -19,7 +19,7 @@
 
 _start:
   
-  movl     $6, %ebx                    #put the number that you want to calculate the factorial into ebx
+  movl     $4, %ebx                    #put the number that you want to calculate the factorial into ebx
   pushl    %ebx                        #push number on the stack, this number is the first parameter of the
                                        #function factorial
                                        
@@ -49,8 +49,18 @@ factorial:
   
   #                                     #here you can make extra room for local variables
   
-  #TODO factorial logic and close function
+  movl      8(%ebp), %ebx               #load the first parameter in ebx
+  movl      %ebx, %eax                  #load the first number into eax, which is the register that will contain the result
   
+  factorial_loop:
+  subl      $1, %ebx                        #decrease our factorial counter by one
+  cmpl      $0, %ebx                    #checks if our counter is at zero
+  je        exit_loop                   #if counter is == to zero jump to the exit of the function
+  imull     %ebx, %eax                  #else multiply decreased value with eax (which will contain the final result)
+  jmp       factorial_loop
+  
+  
+  exit_loop:
   movl      %ebp, %esp                  #bring the old base pointer back to the initial stack frame
   popl      %ebp                        #restore old ebp
   ret                                   #pops value on the top of the stack, which is the old return address, and
