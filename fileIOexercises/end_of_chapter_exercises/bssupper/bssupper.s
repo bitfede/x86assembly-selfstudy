@@ -101,7 +101,7 @@ _start:
     
   store_fd_out:
   ##### STORE THE OUTPUT FILE-DESCRIPTOR #####
-    movl %eax, ST_FD_OUT(%ebp)              #store the file descriptor here
+    movl %eax, OUTPUT_FILE_DATA             #store the file descriptor here
     
     
   ##### BEGIN MAIN LOOP #####
@@ -129,7 +129,7 @@ _start:
     ### WRITE THE BLOCK OUT TO THE OUTPUT FILE ###
     movl %eax, %edx                         #size of the buffer
     movl $SYS_WRITE, %eax                   #open syscall
-    movl ST_FD_OUT(%ebp), %ebx              #file to use
+    movl OUTPUT_FILE_DATA, %ebx              #file to use
     movl $BUFFER_DATA, %ecx                 #location of the buffer
     int $LINUX_SYSCALL                      #send interrupt to linux kernel
     
