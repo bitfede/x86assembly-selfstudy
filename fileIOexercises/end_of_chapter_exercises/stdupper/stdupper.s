@@ -83,7 +83,7 @@ _start:
   ##### BEGIN MAIN LOOP #####
   read_loop_begin:
     
-    ### READ IN A BLOCK FROM THE UNPUT FILE ###
+    ### READ IN A BLOCK FROM STDIN ###
     movl $SYS_READ, %eax                    #open syscall
     movl $STDIN, %ebx                       #get the unput file descriptor
     movl $BUFFER_DATA, %ecx                 #get the location to read into
