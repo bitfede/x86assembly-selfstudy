@@ -88,16 +88,52 @@ _start:
     #### CREATE FILE heynow.txt ####
     
     movl    $SYS_OPEN, %eax                     #send the open file system command into %eax
-    movl    BUFFER_DATA, %ebx                   #put the name of the file into %ebx
-    movl    O_CREAT_WRONLY_TRUNC, %ecx          #flags for writing into file
+    movl    $BUFFER_DATA, %ebx                  #put the name of the file into %ebx
+    movl    $O_CREAT_WRONLY_TRUNC, %ecx         #flags for writing into file
     movl    $0666, %edx                         #set file permissions
-    int     $LINUX_SYSCALL                      #call linux kernel
+    int     $LINUX_SYSCALL                      #wake up linux kernel
+    
+    #### READ FROM .DATA THE STRING TO BE PRINTED ####
+    #clear registers
+    movl    $0, %eax
+    movl    $0, %ecx 
+    movl    $0, %esi
+    movl    $0, %edi
+    
+    movl    $string_towrite, %esi
+    
+    stringtowrite_loop:
+        
+        movb    (%esi, %edi, 1), %al            #read 1 byte from the %esi register, which has the address
+                                                #of the .data we need
+        cmpb    $END_OF_STRING, %al             #check if what you just read is the end of the string
+        je      stringtowrite_end_loop          #if it is go to the end of the loop
+        movb    %al, BUFFER_DATA(, %edi, 1)     #write that byte in our buffer data memory
+        incl    %edi                            #increase the counter by one, so next time we read/write one step further
+        jmp     stringtowrite_loop
+        
+        
+    stringtowrite_end_loop:
+    
+    
+    ##### DEBUG CHECK CONTENT OF BUFFER_DATA #####
+    movl   $BUFFER_SIZE , %edx              #put the size of the buffer in %edx register
+    movl   $SYS_WRITE, %eax                 #puts the type of command we want to execute
+    movl   $STDOUT, %ebx                    #we tell linux we want to write to STOUD file descriptor
+    movl   $BUFFER_DATA, %ecx               #put the actual data to be written in %ecx
+    int     $LINUX_SYSCALL                  #call linux kernel
+    
+    ##### close STDOUT #####
+    movl $SYS_CLOSE, %eax                   #put sysclose command      
+    movl $STDOUT, %ebx                      #give file descriptor
+    int $LINUX_SYSCALL                      #call linux kernel
+    
+    
+    
+    ### EXIT PROGRAM ###
 
-
-
-
-  movl    $SYS_EXIT , %eax
-  int     $LINUX_SYSCALL
+    movl    $SYS_EXIT , %eax
+    int     $LINUX_SYSCALL
   
   
   
