@@ -50,7 +50,8 @@ string_towrite:
 .lcomm BUFFER_DATA, BUFFER_SIZE
 
 .section .text
-
+  
+  .equ ST_NEWFILE_DSCR, -4
 
 .globl _start
 
@@ -93,6 +94,8 @@ _start:
     movl    $0666, %edx                         #set file permissions
     int     $LINUX_SYSCALL                      #wake up linux kernel
     
+    movl    %eax, ST_NEWFILE_DSCR(%ebp)
+    
     #### READ FROM .DATA THE STRING TO BE PRINTED ####
     #clear registers
     movl    $0, %eax
@@ -117,17 +120,21 @@ _start:
     
     
     ##### DEBUG CHECK CONTENT OF BUFFER_DATA #####
-    movl   $BUFFER_SIZE , %edx              #put the size of the buffer in %edx register
-    movl   $SYS_WRITE, %eax                 #puts the type of command we want to execute
-    movl   $STDOUT, %ebx                    #we tell linux we want to write to STOUD file descriptor
-    movl   $BUFFER_DATA, %ecx               #put the actual data to be written in %ecx
-    int     $LINUX_SYSCALL                  #call linux kernel
+    #movl   $BUFFER_SIZE , %edx              #put the size of the buffer in %edx register
+    #movl   $SYS_WRITE, %eax                 #puts the type of command we want to execute
+    #movl   $STDOUT, %ebx                    #we tell linux we want to write to STOUD file descriptor
+    #movl   $BUFFER_DATA, %ecx               #put the actual data to be written in %ecx
+    #int     $LINUX_SYSCALL                  #call linux kernel
     
     ##### close STDOUT #####
-    movl $SYS_CLOSE, %eax                   #put sysclose command      
-    movl $STDOUT, %ebx                      #give file descriptor
-    int $LINUX_SYSCALL                      #call linux kernel
+    #movl $SYS_CLOSE, %eax                   #put sysclose command      
+    #movl $STDOUT, %ebx                      #give file descriptor
+    #int $LINUX_SYSCALL                      #call linux kernel
     
+    
+    #### WRITE STRING TO FILE ####
+    
+    movl    $SYS_WRITE
     
     
     ### EXIT PROGRAM ###
