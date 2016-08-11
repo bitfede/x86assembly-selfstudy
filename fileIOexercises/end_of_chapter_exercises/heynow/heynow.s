@@ -56,7 +56,11 @@ string_towrite:
 .globl _start
 
 _start:
-  
+
+    #here we save the stack pointer so we can save the file descriptor later    
+    movl   %esp, %ebp                         #save the stack pointer
+
+    
     #preparing to write filename 'heynow.txt' into buffer
     movl   $0, %ecx                         #clear register with zeroes
     movl   $0 , %edi                        #preparing the counter
@@ -131,10 +135,14 @@ _start:
     #movl $STDOUT, %ebx                      #give file descriptor
     #int $LINUX_SYSCALL                      #call linux kernel
     
-    
     #### WRITE STRING TO FILE ####
     
-    movl    $SYS_WRITE
+    movl    $BUFFER_SIZE, %edx               #put length of buffer into %edx
+    movl    $SYS_WRITE, %eax                 #put file write system call in %eax
+    movl    ST_NEWFILE_DSCR(%ebp), %ebx      #put file descriptor into %ebx
+    movl    $BUFFER_DATA, %ecx               #put the content of the buffer into ecx so it will be printed to file
+    int     $LINUX_SYSCALL
+ 
     
     
     ### EXIT PROGRAM ###
