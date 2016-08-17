@@ -1,5 +1,0 @@
-#
-# Common Linux Definitions
-#
-
-
