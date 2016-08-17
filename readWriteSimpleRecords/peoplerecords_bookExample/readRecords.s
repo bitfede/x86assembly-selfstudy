@@ -31,3 +31,12 @@ read_record:
   movl      ST_READ_BUFFER(%ebp), %ecx
   movl      $RECORD_SIZE, %edx
   movl      $SYS_READ, %eax    
+  int       $LINUX_SYSCALL
+  
+  #NOTE - %eax has the return value, which we will give back to our calling program
+  
+  popl      %ebx
+  
+  movl      %ebp, %esp
+  popl      %ebp
+  ret
