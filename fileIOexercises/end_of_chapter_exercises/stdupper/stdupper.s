@@ -122,6 +122,10 @@ _start:
     movl $STDOUT, %ebx      
     int $LINUX_SYSCALL
     
+    movl $SYS_CLOSE, %eax
+    movl $STDIN, %ebx
+    int $LINUX_SYSCALL
+    
     ### EXIT ###
     movl $SYS_EXIT, %eax
     movl $0, %ebx
