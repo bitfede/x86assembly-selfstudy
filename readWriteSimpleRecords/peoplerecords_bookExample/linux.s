@@ -23,4 +23,4 @@
 
 #Common status codes
 
-.equ END_OF_FILE
+.equ END_OF_FILE, 0

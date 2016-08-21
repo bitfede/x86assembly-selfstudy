@@ -8,6 +8,8 @@
 # OUTPUT:    This function writes the data to the buffer and returns a status code.
 #
 
+.code32
+
 .include "record-def.s"
 .include "linux.s"
 

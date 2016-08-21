@@ -8,6 +8,8 @@
 # OUTPUT:    This function produces a status code.
 #
 
+.code32
+
 .include  "linux.s"
 .include  "record-def.s"
 
