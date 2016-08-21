@@ -31,7 +31,7 @@ write_record:
   pushl        %ebx
   movl         $SYS_WRITE, %eax
   movl         ST_FILEDES(%ebp), %ebx
-  movl         ST_WRITE_BUFFER, %ecx
+  movl         ST_WRITE_BUFFER(%ebp), %ecx
   movl         $RECORD_SIZE, %edx
   int          $LINUX_SYSCALL
   
